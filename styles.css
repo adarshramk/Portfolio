@@ -76,3 +76,39 @@
 .curiosity-copy{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .curiosity-copy p{margin:0;padding:16px;border-radius:10px;background:rgba(255,255,255,.045);color:#c5c8df;font-size:.86rem;line-height:1.8}
 @media(max-width:650px){.terminal-keyboard-hint{flex-direction:column}.command-suggestions li{align-items:flex-start;flex-direction:column;gap:2px}.curiosity-copy{grid-template-columns:1fr}.curiosity-panel-head{align-items:flex-start}.project-curiosity-clue{padding:14px}}
+
+/* Curiosity OS themes stay scoped to the terminal container. */
+.terminal-panel{--t-bg:#171b3a;--t-bar:#202448;--t-text:#d6d9ef;--t-muted:#aeb4d5;--t-welcome:#d4b9ff;--t-prompt:#9ce5d4;--t-error:#ffaaa3;--t-footer:#12152e;--t-footer-muted:#a5aac5;--t-chip-bg:#25294f;--t-chip-text:#f6f1e8;--t-border:rgba(143,153,255,.3);--t-button-bg:#d4b9ff;--t-button-text:#11142e;background:var(--t-bg);border-color:var(--t-border);color:var(--t-text)}
+.terminal-panel[data-theme="lavender"]{--t-bg:#241d38;--t-bar:#342849;--t-text:#f0eafa;--t-muted:#c9bbdc;--t-welcome:#e1c7ff;--t-prompt:#aebeff;--t-error:#ffb1a5;--t-footer:#1c172d;--t-footer-muted:#b4a8c8;--t-chip-bg:#3b2d55;--t-chip-text:#f5efff;--t-border:rgba(212,185,255,.36);--t-button-bg:#d4b9ff;--t-button-text:#211934}
+.terminal-panel[data-theme="ivory"]{--t-bg:#f6f1e8;--t-bar:#e7dfd3;--t-text:#252344;--t-muted:#514d67;--t-welcome:#65468f;--t-prompt:#3150ad;--t-error:#a33f39;--t-footer:#e8e0d5;--t-footer-muted:#504b65;--t-chip-bg:#e2d9cc;--t-chip-text:#252344;--t-border:rgba(37,35,68,.24);--t-button-bg:#d4b9ff;--t-button-text:#252344}
+.terminal-panel .terminal-bar{background:var(--t-bar);border-color:var(--t-border);color:var(--t-muted)}
+.terminal-panel .terminal-bar button{color:var(--t-muted)}
+.terminal-panel .terminal-output{color:var(--t-text)}
+.terminal-panel .terminal-output code{color:var(--t-error)}
+.terminal-panel .terminal-welcome{color:var(--t-welcome)}
+.terminal-panel .terminal-line,.terminal-panel .prompt{color:var(--t-prompt)}
+.terminal-panel .terminal-error{color:var(--t-error)}
+.terminal-panel .terminal-form{border-color:var(--t-border)}
+.terminal-panel .terminal-form input{color:var(--t-text)}
+.terminal-panel .terminal-form input::placeholder{color:var(--t-muted)}
+.terminal-panel .terminal-form button{background:var(--t-button-bg);color:var(--t-button-text)}
+.terminal-panel .terminal-footer{background:var(--t-footer);color:var(--t-footer-muted)}
+.terminal-panel .terminal-quick-commands,.terminal-panel .command-suggestions,.terminal-panel .terminal-keyboard-hint{background:var(--t-footer)}
+.terminal-panel .terminal-quick-commands button{background:var(--t-chip-bg);color:var(--t-chip-text);border-color:var(--t-border)}
+.terminal-panel .terminal-keyboard-hint{color:var(--t-muted)}
+.terminal-panel .command-suggestions li{color:var(--t-text)}
+.terminal-panel .command-suggestions li span{color:var(--t-muted)}
+.terminal-panel .command-suggestions li[aria-selected="true"],.terminal-panel .command-suggestions li:hover{background:var(--t-chip-bg);color:var(--t-welcome)}
+.terminal-panel .terminal-theme-status{flex:0 0 auto;color:var(--t-welcome);font: .52rem var(--mono);letter-spacing:.05em}
+.terminal-panel #skipTerminalBoot{flex:0 0 auto;padding:5px 8px;border:1px solid var(--t-border);border-radius:999px;background:var(--t-chip-bg);color:var(--t-text);font: .58rem var(--sans);cursor:pointer}
+.terminal-panel #skipTerminalBoot[hidden]{display:none}
+.terminal-panel .terminal-usp-banner{background:linear-gradient(100deg,rgba(255,158,145,.12),rgba(212,185,255,.075))}
+.terminal-panel[data-theme="ivory"] .terminal-usp-banner{background:linear-gradient(100deg,rgba(104,132,255,.12),rgba(212,185,255,.2))}
+.terminal-panel[data-theme="ivory"] .terminal-usp-banner .usp-kicker{color:#8c413b}
+.terminal-panel[data-theme="ivory"] .terminal-usp-banner strong{color:var(--t-text)}
+.terminal-panel[data-theme="ivory"] .terminal-usp-banner small{color:var(--t-muted)}
+.terminal-panel[data-theme="ivory"] .terminal-quick-commands>span{color:#8c413b}
+.terminal-panel[data-theme="ivory"] .terminal-keyboard-hint span{color:#8c413b}
+.terminal-panel[data-theme="ivory"] .terminal-footer i{background:#3150ad}
+.terminal-panel ::selection{background:var(--t-welcome);color:var(--t-bg)}
+@media(max-width:650px){.terminal-panel .terminal-bar{height:auto;min-height:48px;flex-wrap:wrap;padding-block:8px;gap:7px}.terminal-panel .terminal-bar>span:first-of-type{flex:1 1 125px}.terminal-panel .terminal-theme-status{font-size:.48rem}.terminal-panel #skipTerminalBoot{font-size:.55rem}}

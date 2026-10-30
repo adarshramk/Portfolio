@@ -3,6 +3,9 @@
   const form = document.getElementById('terminalForm');
   const input = document.getElementById('terminalInput');
   const suggestions = document.getElementById('commandSuggestions');
+  const terminal = document.getElementById('curiosityTerminal');
+  const themeStatus = document.getElementById('terminalThemeStatus');
+  const skipBootButton = document.getElementById('skipTerminalBoot');
   const clearButton = document.getElementById('clearTerminal');
   const unlocked = document.getElementById('observatoryUnlocked');
   const closeUnlocked = document.getElementById('closeObservatory');
@@ -18,7 +21,7 @@
     ['agent', 'how the coding-agent workflow works'], ['contact', 'find the human behind the prompt'], ['clear', 'clear this terminal'],
     ['neofetch', 'portfolio system summary'], ['history', 'show this session’s commands'], ['progress', 'view learning areas'],
     ['explore', 'begin Project Curiosity'], ['coffee', 'take a tiny break'], ['42', 'the answer to a good question'],
-    ['sudo hire adarsh', 'a harmless hiring simulation'], ['sudo hire-me', 'legacy hiring simulation'], ['secret', 'a small developer secret'], ['systems', 'answer the Project Curiosity clue']
+    ['sudo hire adarsh', 'a harmless hiring simulation'], ['sudo hire-me', 'legacy hiring simulation'], ['secret', 'a small developer secret'], ['systems', 'answer the Project Curiosity clue'], ['theme', 'view or change terminal colors']
   ];
   const commandNames = commandData.map(([name]) => name);
   const history = [];
@@ -26,6 +29,38 @@
   let selectedSuggestion = -1;
   let projectVisited = false;
   let missionStarted = false;
+  let bootRunning = false;
+  let bootTimers = [];
+
+  const themes = ['indigo', 'lavender', 'ivory'];
+  const themeNames = { indigo: 'Indigo', lavender: 'Lavender', ivory: 'Ivory' };
+  const bootLines = [
+    'CURIOSITY OS v2.0',
+    'Initializing interface...',
+    'Loading portfolio modules...',
+    'Checking exploration systems...',
+    'Loading curiosity engine...',
+    'All systems ready.',
+    'Welcome, explorer.'
+  ];
+
+  function readStorage(storageName, key) {
+    try { return window[storageName].getItem(key); } catch { return null; }
+  }
+
+  function writeStorage(storageName, key, value) {
+    try { window[storageName].setItem(key, value); return true; } catch { return false; }
+  }
+
+  function applyTheme(theme, save = true) {
+    if (!themes.includes(theme)) return false;
+    terminal.dataset.theme = theme;
+    themeStatus.textContent = `${themeNames[theme].toUpperCase()} THEME`;
+    return !save || writeStorage('localStorage', 'curiosityOsTheme', theme);
+  }
+
+  const savedTheme = readStorage('localStorage', 'curiosityOsTheme');
+  applyTheme(themes.includes(savedTheme) ? savedTheme : 'indigo', false);
 
   const responses = {
     help: `Available commands:\n${commandData.map(([name, description]) => `  ${name.padEnd(17)} ${description}`).join('\n')}`,
@@ -129,6 +164,18 @@
       appendLine(history.length ? history.map((item, index) => `${String(index + 1).padStart(2, ' ')}  ${item}`).join('\n') : 'No commands in this session yet.');
       return;
     }
+    if (command === 'theme' || command.startsWith('theme ')) {
+      const requestedTheme = command.slice('theme'.length).trim();
+      if (!requestedTheme) {
+        appendLine(`TERMINAL THEMES / Active: ${themeNames[terminal.dataset.theme]}\nAvailable: indigo, lavender, ivory\nUse: theme <name>`);
+      } else if (!themes.includes(requestedTheme)) {
+        appendLine(`Unknown theme: ${requestedTheme}. Choose indigo, lavender, or ivory.`, 'terminal-error');
+      } else {
+        const saved = applyTheme(requestedTheme);
+        appendLine(`Theme changed to ${themeNames[requestedTheme]}.${saved ? ' Preference saved on this device.' : ' It will last for this visit; browser storage is unavailable.'}`, 'terminal-welcome');
+      }
+      return;
+    }
     if (command === 'contact') {
       appendLine(responses.contact, 'terminal-welcome');
       document.getElementById('contact').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -207,6 +254,63 @@
   });
   closeUnlocked.addEventListener('click', () => { unlocked.hidden = true; });
   closeMission.addEventListener('click', () => { missionPanel.hidden = true; input.focus(); });
+
+  function finishBoot() {
+    if (!bootRunning) return;
+    bootRunning = false;
+    bootTimers.forEach((timer) => window.clearTimeout(timer));
+    bootTimers = [];
+    skipBootButton.hidden = true;
+    input.disabled = false;
+    if (output.lastElementChild?.textContent !== 'Welcome, explorer.') appendLine('Welcome, explorer.', 'terminal-welcome');
+  }
+
+  function startBoot() {
+    if (bootRunning || readStorage('sessionStorage', 'curiosityOsBootShown') === 'true') return;
+    writeStorage('sessionStorage', 'curiosityOsBootShown', 'true');
+    let reduceMotion = false;
+    try { reduceMotion = Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches); } catch { /* Continue with the restrained animation. */ }
+    if (reduceMotion) {
+      bootLines.forEach((line, index) => appendLine(line, index === 0 || index === bootLines.length - 1 ? 'terminal-welcome' : ''));
+      return;
+    }
+    try {
+      bootRunning = true;
+      input.disabled = true;
+      skipBootButton.hidden = false;
+      output.replaceChildren();
+      bootLines.forEach((line, index) => {
+        bootTimers.push(window.setTimeout(() => {
+          if (bootRunning) appendLine(line, index === 0 || index === bootLines.length - 1 ? 'terminal-welcome' : '');
+          if (index === bootLines.length - 1) finishBoot();
+        }, index * 330));
+      });
+    } catch {
+      finishBoot();
+      input.disabled = false;
+      skipBootButton.hidden = true;
+      appendLine('Startup animation skipped. The terminal is ready.', 'terminal-welcome');
+    }
+  }
+
+  skipBootButton.addEventListener('click', finishBoot);
+  document.addEventListener('keydown', (event) => {
+    if (bootRunning && event.key === 'Escape') finishBoot();
+  });
+  try {
+    const terminalObserver = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        startBoot();
+        terminalObserver.disconnect();
+      }
+    }, { threshold: 0.12 });
+    terminalObserver.observe(terminal);
+  } catch {
+    // If observation is unavailable, leave the terminal interactive without a boot sequence.
+    input.disabled = false;
+    skipBootButton.hidden = true;
+  }
+
   const projectSection = document.getElementById('projects');
   const projectObserver = new IntersectionObserver((entries) => {
     if (missionStarted && entries.some((entry) => entry.isIntersecting)) projectVisited = true;
