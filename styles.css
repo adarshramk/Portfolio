@@ -55,3 +55,24 @@
   .terminal-quick-commands{gap:6px}
   .terminal-quick-commands>span{width:100%;margin-bottom:2px}
 }
+
+/* Curiosity OS command aids and mission panels */
+.command-suggestions{list-style:none;margin:0;padding:5px 12px 8px;border-top:1px solid var(--line);background:#181c3a;font: .68rem/1.5 var(--mono);max-height:190px;overflow:auto}
+.command-suggestions[hidden]{display:none}
+.command-suggestions li{display:flex;justify-content:space-between;gap:14px;padding:7px 9px;border-radius:6px;color:var(--ivory);cursor:pointer}
+.command-suggestions li span{color:#9da3c5;font: .62rem var(--sans)}
+.command-suggestions li[aria-selected="true"],.command-suggestions li:hover{background:#292e59;color:var(--lilac)}
+.terminal-keyboard-hint{display:flex;justify-content:space-between;gap:8px;padding:5px 15px 9px;background:#181c3a;color:#9298ba;font: .56rem/1.5 var(--mono)}
+.terminal-keyboard-hint span{color:var(--coral)}
+.project-curiosity-clue{margin-top:18px;padding:16px 20px;border:1px dashed rgba(255,158,145,.34);border-radius:12px;background:rgba(255,158,145,.045)}
+.project-curiosity-clue>span{font: .58rem var(--mono);letter-spacing:.08em;color:var(--coral)}
+.project-curiosity-clue p{margin:7px 0 0;color:var(--muted);font-size:.84rem}
+.project-curiosity-clue strong{color:var(--lilac);font-family:var(--mono);font-weight:500}
+.curiosity-panel{margin-top:28px;margin-bottom:20px;padding:clamp(22px,4vw,42px);border:1px solid rgba(212,185,255,.34);border-radius:18px;background:radial-gradient(circle at 100% 0,rgba(255,158,145,.1),transparent 34%),linear-gradient(130deg,#191d3e,#22264d);animation:reveal .35s ease both}
+.curiosity-panel[hidden]{display:none}
+.curiosity-panel-head{display:flex;justify-content:space-between;align-items:center;gap:15px;color:var(--coral);font: .62rem var(--mono);letter-spacing:.08em}
+.curiosity-panel-head button{border:1px solid var(--line);border-radius:999px;padding:7px 11px;background:transparent;color:var(--ivory);font: .72rem var(--sans);cursor:pointer}
+.curiosity-panel h2{margin:28px 0 18px;color:var(--ivory);font:600 clamp(1.7rem,4vw,3rem)/1.1 var(--display);letter-spacing:-.055em}
+.curiosity-copy{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.curiosity-copy p{margin:0;padding:16px;border-radius:10px;background:rgba(255,255,255,.045);color:#c5c8df;font-size:.86rem;line-height:1.8}
+@media(max-width:650px){.terminal-keyboard-hint{flex-direction:column}.command-suggestions li{align-items:flex-start;flex-direction:column;gap:2px}.curiosity-copy{grid-template-columns:1fr}.curiosity-panel-head{align-items:flex-start}.project-curiosity-clue{padding:14px}}
